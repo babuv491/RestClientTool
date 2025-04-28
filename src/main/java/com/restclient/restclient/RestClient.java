@@ -1,5 +1,8 @@
 package com.restclient.restclient;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,11 +20,18 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Path;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.time.Duration;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -58,12 +68,35 @@ public class RestClient extends Application {
 
 
 
+
     @Override
     public void start(Stage primaryStage) {
         initializePrimaryStage(primaryStage);
         Scene scene = createMainScene();
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        // Add URL field listener to detect query parameters
+        urlField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && newValue.contains("?")) {
+                String queryString = newValue.substring(newValue.indexOf("?") + 1);
+                String[] params = queryString.split("&");
+
+                // Clear existing query params
+                queryParams.clear();
+
+                // Add each query parameter found in URL
+                for (String param : params) {
+                    String[] keyValue = param.split("=");
+                    if (keyValue.length > 0 ) {
+                        queryParams.add(new QueryParam(keyValue[0], keyValue.length > 1 ? keyValue[1] : ""));
+                    }
+                }
+
+                // Update URL field to remove query parameters
+               // urlField.setText(newValue.substring(0, newValue.indexOf("?")));
+            }
+        });
     }
 
     private void initializePrimaryStage(Stage primaryStage) {
@@ -79,7 +112,9 @@ public class RestClient extends Application {
         } catch (Exception e) {
             System.err.println("Failed to load application icon: " + e.getMessage());
         }
+        primaryStage.show();
     }
+
 
     private Scene createMainScene() {
         BorderPane mainLayout = new BorderPane();
@@ -140,7 +175,15 @@ public class RestClient extends Application {
 
     private Button createSendButton() {
         Button sendButton = new Button("Send");
-        sendButton.setOnAction(e -> sendRequest());
+        sendButton.setOnAction(e -> {
+            try {
+                sendRequest();
+            } catch (NoSuchAlgorithmException ex) {
+                throw new RuntimeException(ex);
+            } catch (KeyManagementException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
         return sendButton;
     }
 
@@ -374,9 +417,30 @@ public class RestClient extends Application {
                 .filter(header -> !header.getKey().isEmpty())
                 .forEach(header -> requestBuilder.header(header.getKey(), header.getValue()));
     }
-    private void sendRequest() {
+
+    private static TrustManager[] trustAllCerts = new TrustManager[]{
+            new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+                public void checkClientTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+                public void checkServerTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+            }
+    };
+    private void sendRequest() throws NoSuchAlgorithmException, KeyManagementException {
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(null, trustAllCerts, new SecureRandom());
+        HttpClient client = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofMillis(10 * 1000))
+        .sslContext(sslContext) // SSL context 'sc' initialised as earlier
+               // .sslParameters(parameters) // ssl parameters if overriden
+                .build();
         try {
-            HttpClient client = HttpClient.newHttpClient();
+           // HttpClient client = HttpClient.newHttpClient();
             HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
                     .uri(new URI(buildUrlWithParams()))
                     .method(methodComboBox.getValue(),
@@ -390,8 +454,9 @@ public class RestClient extends Application {
 
             HttpResponse<String> response = client.send(requestBuilder.build(),
                     HttpResponse.BodyHandlers.ofString());
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            responseBody.setText(gson.toJson((new JsonParser().parse(response.body()))));
 
-            responseBody.setText(response.body());
 
             // Add to history
             historyList.add(0, new HistoryEntry(

@@ -42,3 +42,5 @@ build/
 .idea/uiDesigner.xml
 .mvn/wrapper/maven-wrapper.jar
 .mvn/wrapper/maven-wrapper.properties
+src/main/java/com/restclient/restclient/RestApiTester.java
+src/rest-api.svg
