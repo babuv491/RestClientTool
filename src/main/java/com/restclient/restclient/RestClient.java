@@ -3,6 +3,7 @@ package com.restclient.restclient;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
+import io.restassured.response.Response;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -33,6 +34,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -410,13 +412,18 @@ public class RestClient extends Application {
                 .map(param -> param.getKey() + "=" + param.getValue())
                 .collect(Collectors.joining("&"));
 
+
+
         return baseUrl + (baseUrl.contains("?") ? "&" : "?") + queryString;
     }
     private void addHeadersToRequest(HttpRequest.Builder requestBuilder) {
         headers.stream()
                 .filter(header -> !header.getKey().isEmpty())
                 .forEach(header -> requestBuilder.header(header.getKey(), header.getValue()));
+
     }
+
+
 
     private static TrustManager[] trustAllCerts = new TrustManager[]{
             new X509TrustManager() {
@@ -452,12 +459,20 @@ public class RestClient extends Application {
             // Add authentication
             addAuthenticationToRequest(requestBuilder);
 
+            System.out.println(requestBuilder.toString());
             HttpResponse<String> response = client.send(requestBuilder.build(),
                     HttpResponse.BodyHandlers.ofString());
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            responseBody.setText(gson.toJson((new JsonParser().parse(response.body()))));
+            //responseBody.setText(gson.toJson((new JsonParser().parse(response.body()))));
 
+            HashMap<String, Object> queryParamMap = new HashMap<>();
+            queryParams.stream()
+                    .filter(queryParam -> !queryParam.getKey().isEmpty())
+                    .forEach(queryParam -> queryParamMap.put(queryParam.getKey(), queryParam.getValue()));
 
+            //Rest Assured
+            Response response1 = GenericRestAPI.makeAPICall(methodComboBox.getValue().toString(), urlField.getText(), null, null, null, requestBody.getText(), queryParamMap, null, null);
+            responseBody.setText(response1.asPrettyString());
             // Add to history
             historyList.add(0, new HistoryEntry(
                     methodComboBox.getValue(), urlField.getText()
