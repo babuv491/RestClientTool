@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.rct.restclienttool.BulkRequestController"
+            prefHeight="800.0" prefWidth="1000.0"
+            styleClass="root">
+    <top>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Bulk Request Execution" styleClass="h3"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <CheckBox fx:id="runSequentiallyCheckbox" text="Run Sequentially" selected="true"/>
+                <Label text="Delay (ms):"/>
+                <Spinner fx:id="delaySpinner" prefWidth="100"/>
+                <Button fx:id="executeButton" text="Execute All" styleClass="btn,btn-primary"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <SplitPane dividerPositions="0.5" orientation="VERTICAL">
+            <!-- Requests Section -->
+            <VBox spacing="10">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Requests" styleClass="h4"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="addRequestButton" text="Add" styleClass="btn,btn-sm,btn-outline-primary"/>
+                    <Button fx:id="removeRequestButton" text="Remove" styleClass="btn,btn-sm,btn-outline-danger"/>
+                    <Button fx:id="importRequestsButton" text="Import" styleClass="btn,btn-sm,btn-outline-secondary"/>
+                </HBox>
+                <TableView fx:id="requestsTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="methodColumn" text="Method" prefWidth="100"/>
+                        <TableColumn fx:id="urlColumn" text="URL" prefWidth="500"/>
+                        <TableColumn fx:id="nameColumn" text="Name" prefWidth="200"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="No requests added. Click 'Add' to create a new request."/>
+                    </placeholder>
+                </TableView>
+            </VBox>
+
+            <!-- Results Section -->
+            <SplitPane dividerPositions="0.7" orientation="HORIZONTAL">
+                <VBox spacing="10">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Results" styleClass="h4"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <ProgressBar fx:id="progressBar" prefWidth="200" progress="0"/>
+                        <Label fx:id="statusLabel" text="Ready" styleClass="text-muted"/>
+                    </HBox>
+                    <TableView fx:id="resultsTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
+                            <TableColumn fx:id="timeColumn" text="Time" prefWidth="100"/>
+                            <TableColumn fx:id="responseColumn" text="Response" prefWidth="500"/>
+                        </columns>
+                        <placeholder>
+                            <Label text="No results yet. Execute requests to see results here."/>
+                        </placeholder>
+                    </TableView>
+                </VBox>
+
+                <VBox spacing="10">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+                    <Label text="Summary" styleClass="h4"/>
+                    <TextArea fx:id="summaryArea" VBox.vgrow="ALWAYS" editable="false" wrapText="true"/>
+                </VBox>
+            </SplitPane>
+        </SplitPane>
+    </center>
+</BorderPane>

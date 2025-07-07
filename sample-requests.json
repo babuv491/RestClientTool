@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Get All Posts",
+    "method": "GET",
+    "url": "https://jsonplaceholder.typicode.com/posts",
+    "headers": {
+      "Accept": "application/json"
+    }
+  },
+  {
+    "name": "Get Single Post",
+    "method": "GET",
+    "url": "https://jsonplaceholder.typicode.com/posts/1",
+    "headers": {
+      "Accept": "application/json"
+    }
+  },
+  {
+    "name": "Create New Post",
+    "method": "POST",
+    "url": "https://jsonplaceholder.typicode.com/posts",
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    "body": "{\"title\": \"Sample Post\", \"body\": \"This is a sample post body\", \"userId\": 1}"
+  },
+  {
+    "name": "Update Post",
+    "method": "PUT",
+    "url": "https://jsonplaceholder.typicode.com/posts/1",
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    "body": "{\"id\": 1, \"title\": \"Updated Post\", \"body\": \"This is an updated post body\", \"userId\": 1}"
+  },
+  {
+    "name": "Delete Post",
+    "method": "DELETE",
+    "url": "https://jsonplaceholder.typicode.com/posts/1",
+    "headers": {
+      "Accept": "application/json"
+    }
+  }
+]
+

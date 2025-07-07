@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.rct.restclienttool.CurlImportDialogController"
+      spacing="15"
+      styleClass="panel-body"
+      prefWidth="600" prefHeight="400">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Import cURL Command" styleClass="h4,text-primary"/>
+    <Label text="Paste a cURL command below to import it as a request" styleClass="text-muted"/>
+
+    <TextArea fx:id="curlCommandArea"
+              promptText="Paste your cURL command here (e.g., curl -X GET https://api.example.com -H 'Authorization: Bearer token')"
+              wrapText="true"
+              VBox.vgrow="ALWAYS"
+              styleClass="form-control,code-area"/>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button fx:id="cancelButton" text="Cancel" styleClass="btn,btn-secondary" onAction="#handleCancel"/>
+        <Button fx:id="importButton" text="Import" styleClass="btn,btn-primary" onAction="#handleImport"/>
+    </HBox>
+</VBox>

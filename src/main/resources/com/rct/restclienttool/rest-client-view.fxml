@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.rct.restclienttool.RestClientController"
+            fx:id="rootPane"
+            prefHeight="800.0" prefWidth="1200.0"
+            styleClass="root">
+    <top>
+        <VBox>
+            <!-- Main navbar -->
+            <HBox spacing="10" alignment="CENTER_LEFT" styleClass="bg-dark">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15"/>
+                </padding>
+                <StackPane styleClass="logo-container" minWidth="40" minHeight="40" maxWidth="40" maxHeight="40">
+                    <Rectangle width="40" height="40" arcWidth="10" arcHeight="10" fill="#2196F3"/>
+                    <Text text="API" fill="WHITE" styleClass="logo-text"/>
+                </StackPane>
+                <Label text="REST API Client" styleClass="h3,text-white"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="saveConfigButton" text="Save Config" styleClass="btn,btn-outline-light" onAction="#handleSaveConfig"/>
+                <Button fx:id="loadConfigButton" text="Load Config" styleClass="btn,btn-outline-light" onAction="#handleLoadConfig"/>
+                <Button fx:id="deleteConfigButton" text="Delete Config" styleClass="btn,btn-outline-light" onAction="#handleDeleteConfig"/>
+                <Button fx:id="bulkRequestButton" text="Bulk Requests" styleClass="btn,btn-outline-light" onAction="#handleBulkRequests"/>
+                <Button fx:id="historyButton" text="History" styleClass="btn,btn-outline-light" onAction="#handleShowHistory"/>
+                <Button fx:id="logsButton" text="View Logs" styleClass="btn,btn-outline-light" onAction="#handleViewLogs"/>
+            </HBox>
+
+            <!-- Secondary toolbar with breadcrumbs or additional info -->
+            <HBox spacing="10" alignment="CENTER_LEFT" styleClass="bg-light">
+                <padding>
+                    <Insets top="8" right="15" bottom="8" left="15"/>
+                </padding>
+                <Label text="Dashboard" styleClass="text-muted"/>
+                <Label text="›" styleClass="text-muted"/>
+                <Label text="API Requests" styleClass="text-primary"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <SplitPane dividerPositions="0.5" orientation="HORIZONTAL">
+            <!-- Request Panel -->
+            <VBox spacing="10" styleClass="card">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15"/>
+                </padding>
+                <HBox alignment="CENTER_LEFT" styleClass="panel-header">
+                    <Label text="Request" styleClass="h4,text-primary"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label text="Configure your API request" styleClass="text-muted"/>
+                </HBox>
+                <TabPane fx:id="requestTabPane" VBox.vgrow="ALWAYS" styleClass="tab-pane">
+                    <Tab text="New Request" closable="false">
+                        <fx:include source="request-tab-content.fxml"/>
+                    </Tab>
+                </TabPane>
+            </VBox>
+
+            <!-- Response Panel -->
+            <VBox spacing="10" styleClass="card">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15"/>
+                </padding>
+                <HBox alignment="CENTER_LEFT" styleClass="panel-header">
+                    <Label text="Response" styleClass="h4,text-primary"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label text="View API response" styleClass="text-muted"/>
+                </HBox>
+                <HBox spacing="10" alignment="CENTER_LEFT" styleClass="bg-light">
+                    <padding>
+                        <Insets top="8" right="10" bottom="8" left="10"/>
+                    </padding>
+                    <Label text="Status:" styleClass="text-muted"/>
+                    <Label fx:id="statusLabel" text="" styleClass="badge,badge-secondary" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 5 10;"/>
+                    <Label text="Time:" styleClass="text-muted"/>
+                    <Label fx:id="timeLabel" text="" styleClass="badge,badge-info"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="prettyPrintButton" text="Pretty Print" styleClass="btn,btn-sm,btn-info" onAction="#handlePrettyPrint"/>
+                    <Button fx:id="rawButton" text="Raw" styleClass="btn,btn-sm,btn-outline-secondary" onAction="#handleRawView"/>
+                </HBox>
+                <TabPane VBox.vgrow="ALWAYS" styleClass="tab-pane">
+                    <Tab text="Body" closable="false">
+                        <VBox styleClass="panel-body">
+                            <TextArea fx:id="responseBodyArea" wrapText="true" VBox.vgrow="ALWAYS" styleClass="form-control,code-area"/>
+                        </VBox>
+                    </Tab>
+                    <Tab text="Headers" closable="false">
+                        <VBox styleClass="panel-body">
+                            <TableView fx:id="responseHeadersTable" styleClass="table,table-striped,table-bordered,table-hover">
+                                <columns>
+                                    <TableColumn fx:id="responseHeaderNameColumn" text="Name" prefWidth="200"/>
+                                    <TableColumn fx:id="responseHeaderValueColumn" text="Value" prefWidth="400"/>
+                                </columns>
+                            </TableView>
+                        </VBox>
+                    </Tab>
+                </TabPane>
+            </VBox>
+        </SplitPane>
+    </center>
+</BorderPane>

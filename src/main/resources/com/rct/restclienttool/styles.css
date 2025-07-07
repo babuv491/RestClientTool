@@ -1,0 +1,328 @@
+.root {
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 13px;
+    -fx-background-color: #f8f9fa;
+}
+
+/* Override default button styles with Bootstrap styles */
+.button {
+    -fx-cursor: hand;
+}
+
+/* Custom styling for the send button */
+.send-button {
+    -fx-font-weight: bold;
+}
+
+/* Add hover effects to all buttons */
+.btn:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 4, 0, 0, 1);
+    -fx-translate-y: -1px;
+    -fx-transition: all 0.2s ease;
+}
+
+.text-area, .text-field {
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-border-color: #ced4da;
+    -fx-border-width: 1px;
+    -fx-transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.text-area:focused, .text-field:focused {
+    -fx-border-color: #80bdff;
+    -fx-effect: dropshadow(gaussian, rgba(0,123,255,0.25), 0, 0, 0, 0.2);
+}
+
+.code-area {
+    -fx-font-family: "Consolas", "Monaco", "Courier New", monospace;
+    -fx-font-size: 13px;
+    -fx-background-color: #f8f9fa;
+}
+
+/* Status indicators using Bootstrap colors */
+.status-success {
+    -fx-text-fill: #28a745;
+    -fx-font-weight: bold;
+}
+
+.status-error {
+    -fx-text-fill: #dc3545;
+    -fx-font-weight: bold;
+}
+
+.status-warning {
+    -fx-text-fill: #ffc107;
+    -fx-font-weight: bold;
+}
+
+.tab-pane {
+    -fx-tab-min-width: 100px;
+}
+
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: #f8f9fa;
+}
+
+.tab-pane .tab {
+    -fx-background-color: #e9ecef;
+    -fx-background-radius: 4 4 0 0;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1 1 0 1;
+    -fx-border-radius: 4 4 0 0;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: white;
+    -fx-border-color: #dee2e6 #dee2e6 white #dee2e6;
+}
+
+.tab-pane .tab .tab-label {
+    -fx-text-fill: #495057;
+}
+
+.tab-pane .tab:selected .tab-label {
+    -fx-text-fill: #007bff;
+    -fx-font-weight: bold;
+}
+
+.table-view {
+    -fx-table-cell-border-color: transparent;
+    -fx-background-color: white;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.table-view .column-header {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 0 0 1 0;
+    -fx-font-weight: bold;
+}
+
+.table-view .table-row-cell:odd {
+    -fx-background-color: rgba(0, 0, 0, 0.05);
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: rgba(0, 123, 255, 0.25);
+}
+
+.split-pane {
+    -fx-background-color: transparent;
+}
+
+.split-pane-divider {
+    -fx-background-color: #dee2e6;
+    -fx-padding: 1px;
+}
+
+.split-pane-divider:hover {
+    -fx-background-color: #007bff;
+    -fx-padding: 1px;
+}
+
+.section-header {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #212529;
+}
+
+.app-header {
+    -fx-background-color: #343a40;
+    -fx-padding: 10px;
+}
+
+.app-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+/* Enhanced panel styling */
+.panel {
+    -fx-background-color: white;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 1);
+}
+
+.panel-header {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 4px 4px 0 0;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 10px;
+}
+
+.panel-body {
+    -fx-padding: 15px;
+}
+
+.method-combo {
+    -fx-font-weight: bold;
+}
+
+/* HTTP method colors using Bootstrap colors */
+.method-get {
+   -fx-text-fill: #007bff; /* Bootstrap primary */
+}
+
+.method-post {
+    -fx-text-fill: #28a745; /* Bootstrap success */
+}
+
+.method-put {
+    -fx-text-fill: #fd7e14; /* Bootstrap orange */
+}
+
+.method-delete {
+    -fx-text-fill: #dc3545; /* Bootstrap danger */
+}
+
+.method-patch {
+    -fx-text-fill: #6f42c1; /* Bootstrap purple */
+}
+
+/* Enhanced status code styling */
+.badge {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px 10px;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0, 0, 1);
+}
+
+/* Status code colors by specific code */
+.status-200 {
+    -fx-background-color: #28a745; /* OK - standard green */
+}
+
+.status-201 {
+    -fx-background-color: #20c997; /* Created - teal green */
+}
+
+.status-204 {
+    -fx-background-color: #5cb85c; /* No Content - lighter green */
+}
+
+.status-301, .status-308 {
+    -fx-background-color: #fd7e14; /* Permanent redirects - orange */
+}
+
+.status-302, .status-303, .status-307 {
+    -fx-background-color: #ffc107; /* Temporary redirects - yellow */
+    -fx-text-fill: #212529; /* Darker text for better contrast */
+}
+
+.status-400 {
+    -fx-background-color: #dc3545; /* Bad Request - standard red */
+}
+
+.status-401, .status-403 {
+    -fx-background-color: #d9534f; /* Auth errors - slightly different red */
+}
+
+.status-404 {
+    -fx-background-color: #ff6b6b; /* Not Found - lighter red */
+}
+
+.status-429 {
+    -fx-background-color: #ff4136; /* Too Many Requests - bright red */
+}
+
+.status-500 {
+    -fx-background-color: #6f42c1; /* Internal Server Error - purple */
+}
+
+.status-502, .status-504 {
+    -fx-background-color: #9c27b0; /* Gateway errors - violet */
+}
+
+.status-503 {
+    -fx-background-color: #8b0000; /* Service Unavailable - dark red */
+}
+
+/* Generic status code ranges */
+.badge-success {
+    -fx-background-color: #28a745;
+}
+
+.badge-warning {
+    -fx-background-color: #ffc107;
+    -fx-text-fill: #212529;
+}
+
+.badge-danger {
+    -fx-background-color: #dc3545;
+}
+
+.badge-info {
+    -fx-background-color: #17a2b8;
+}
+
+.badge-primary {
+    -fx-background-color: #007bff;
+}
+
+.badge-secondary {
+    -fx-background-color: #6c757d;
+}
+
+.info-label {
+    -fx-text-fill: #6c757d; /* Bootstrap secondary text */
+}
+
+.url-field {
+    -fx-font-size: 14px;
+    -fx-padding: 8px;
+}
+
+/* Add animation to buttons */
+.btn {
+    -fx-transition: all 0.2s ease;
+}
+
+/* Add card-like effect to panels */
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 1);
+    -fx-padding: 15px;
+}
+
+/* Logo styling */
+.logo-container {
+    -fx-background-radius: 5px;
+}
+
+.logo-text {
+    -fx-font-family: "Arial";
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+/* Loading spinner styling */
+.loading-spinner {
+    -fx-progress-color: #28a745;
+    -fx-background-color: transparent;
+}
+
+.loading-text {
+    -fx-text-fill: #28a745;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.loading-spinner .percentage {
+    -fx-fill: null;
+}

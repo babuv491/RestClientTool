@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.rct.restclienttool.RequestTabController"
+      fx:id="requestTabRoot"
+      spacing="10"
+      VBox.vgrow="ALWAYS"
+      styleClass="panel-body">
+    <padding>
+        <Insets top="5" right="5" bottom="5" left="5"/>
+    </padding>
+
+    <VBox spacing="10">
+        <HBox spacing="10" alignment="CENTER_LEFT" styleClass="input-group">
+            <ComboBox fx:id="methodComboBox" prefWidth="120" styleClass="combo-box,form-control"/>
+            <TextField fx:id="urlField" promptText="Enter URL (e.g. https://api.example.com/v1/resource)" HBox.hgrow="ALWAYS" styleClass="form-control,url-field"/>
+            <Button fx:id="sendButton" text="Send Request" onAction="#handleSendRequest" styleClass="btn,btn-success">
+                <graphic>
+                    <javafx.scene.shape.SVGPath fx:id="sendIcon" content="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="WHITE"/>
+                </graphic>
+            </Button>
+            <HBox fx:id="loadingContainer" visible="false" managed="false" spacing="8" alignment="CENTER">
+                <ProgressIndicator fx:id="loadingIndicator" prefWidth="16" prefHeight="16" styleClass="loading-spinner"/>
+                <Label text="Sending request..." styleClass="loading-text"/>
+            </HBox>
+        </HBox>
+
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="Import cURL" onAction="#handleImportCurl" styleClass="btn,btn-sm,btn-outline-secondary">
+                <graphic>
+                    <javafx.scene.shape.SVGPath content="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" fill="#6c757d"/>
+                </graphic>
+            </Button>
+        </HBox>
+    </VBox>
+
+    <TabPane VBox.vgrow="ALWAYS" styleClass="tab-pane">
+        <Tab text="Params" closable="false">
+            <VBox spacing="10" styleClass="panel-body">
+                <HBox spacing="10" alignment="CENTER_LEFT" styleClass="bg-light">
+                    <padding>
+                        <Insets top="8" right="10" bottom="8" left="10"/>
+                    </padding>
+                    <Button text="Add Parameter" onAction="#handleAddParam" styleClass="btn,btn-sm,btn-primary">
+                        <graphic>
+                            <javafx.scene.shape.SVGPath content="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="WHITE"/>
+                        </graphic>
+                    </Button>
+                    <Button text="Remove Selected" onAction="#handleRemoveParam" styleClass="btn,btn-sm,btn-outline-danger">
+                        <graphic>
+                            <javafx.scene.shape.SVGPath content="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="#dc3545"/>
+                        </graphic>
+                    </Button>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label text="Query Parameters" styleClass="text-muted"/>
+                </HBox>
+                <TableView fx:id="paramsTable" VBox.vgrow="ALWAYS" styleClass="table,table-striped,table-bordered,table-hover">
+                    <columns>
+                        <TableColumn fx:id="paramNameColumn" text="Name" prefWidth="150"/>
+                        <TableColumn fx:id="paramValueColumn" text="Value" prefWidth="250"/>
+                        <TableColumn fx:id="paramEnabledColumn" text="Enabled" prefWidth="80"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="No parameters defined" styleClass="text-muted"/>
+                    </placeholder>
+                </TableView>
+            </VBox>
+        </Tab>
+        <Tab text="Headers" closable="false">
+            <VBox spacing="10" styleClass="panel-body">
+                <HBox spacing="10" alignment="CENTER_LEFT" styleClass="bg-light">
+                    <padding>
+                        <Insets top="8" right="10" bottom="8" left="10"/>
+                    </padding>
+                    <Button fx:id="addHeaderButton" text="Add Header" onAction="#handleAddHeader" styleClass="btn,btn-sm,btn-primary">
+                        <graphic>
+                            <javafx.scene.shape.SVGPath content="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="WHITE"/>
+                        </graphic>
+                    </Button>
+                    <Button fx:id="removeHeaderButton" text="Remove Selected" onAction="#handleRemoveHeader" styleClass="btn,btn-sm,btn-outline-danger">
+                        <graphic>
+                            <javafx.scene.shape.SVGPath content="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="#dc3545"/>
+                        </graphic>
+                    </Button>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label text="HTTP Headers" styleClass="text-muted"/>
+                </HBox>
+                <TableView fx:id="headersTable" VBox.vgrow="ALWAYS" styleClass="table,table-striped,table-bordered,table-hover">
+                    <columns>
+                        <TableColumn fx:id="headerNameColumn" text="Name" prefWidth="150"/>
+                        <TableColumn fx:id="headerValueColumn" text="Value" prefWidth="250"/>
+                        <TableColumn fx:id="headerEnabledColumn" text="Enabled" prefWidth="80"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="No headers defined" styleClass="text-muted"/>
+                    </placeholder>
+                </TableView>
+            </VBox>
+        </Tab>
+        <Tab text="Body" closable="false">
+            <VBox spacing="10" styleClass="panel-body">
+                <HBox spacing="10" alignment="CENTER_LEFT" styleClass="bg-light">
+                    <padding>
+                        <Insets top="8" right="10" bottom="8" left="10"/>
+                    </padding>
+                    <Label text="Content Type:" styleClass="text-muted"/>
+                    <ComboBox fx:id="bodyTypeComboBox" promptText="Content Type" styleClass="combo-box,form-control"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="Format JSON" onAction="#handleFormatBody" styleClass="btn,btn-sm,btn-info">
+                        <graphic>
+                            <javafx.scene.shape.SVGPath content="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="WHITE"/>
+                        </graphic>
+                    </Button>
+                </HBox>
+                <TextArea fx:id="bodyTextArea" wrapText="true" VBox.vgrow="ALWAYS" styleClass="form-control,code-area"/>
+            </VBox>
+        </Tab>
+        <Tab text="Auth" closable="false">
+            <VBox spacing="10" styleClass="panel-body">
+                <HBox spacing="10" alignment="CENTER_LEFT" styleClass="bg-light">
+                    <padding>
+                        <Insets top="8" right="10" bottom="8" left="10"/>
+                    </padding>
+                    <Label text="Authentication Type:" styleClass="text-muted"/>
+                    <ComboBox fx:id="authTypeComboBox" promptText="Auth Type" styleClass="combo-box,form-control"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label text="API Authentication" styleClass="text-muted"/>
+                </HBox>
+
+                <!-- Basic Auth -->
+                <VBox fx:id="basicAuthPane" spacing="10" visible="false" managed="false" styleClass="card">
+                    <padding>
+                        <Insets top="15" right="15" bottom="15" left="15"/>
+                    </padding>
+                    <HBox styleClass="panel-header">
+                        <padding>
+                            <Insets bottom="10"/>
+                        </padding>
+                        <Label text="Basic Authentication" styleClass="h5,text-primary"/>
+                    </HBox>
+                    <GridPane hgap="10" vgap="15">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="120" prefWidth="120"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                        </columnConstraints>
+                        <Label text="Username:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="text-muted"/>
+                        <TextField fx:id="basicAuthUsername" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="form-control" promptText="Enter username"/>
+                        <Label text="Password:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="text-muted"/>
+                        <PasswordField fx:id="basicAuthPassword" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="form-control" promptText="Enter password"/>
+                    </GridPane>
+                </VBox>
+
+                <!-- Bearer Token -->
+                <VBox fx:id="bearerAuthPane" spacing="10" visible="false" managed="false" styleClass="card">
+                    <padding>
+                        <Insets top="15" right="15" bottom="15" left="15"/>
+                    </padding>
+                    <HBox styleClass="panel-header">
+                        <padding>
+                            <Insets bottom="10"/>
+                        </padding>
+                        <Label text="Bearer Token Authentication" styleClass="h5,text-primary"/>
+                    </HBox>
+                    <GridPane hgap="10" vgap="15">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="120" prefWidth="120"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                        </columnConstraints>
+                        <Label text="Token:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="text-muted"/>
+                        <TextField fx:id="bearerToken" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="form-control" promptText="Enter bearer token"/>
+                    </GridPane>
+                </VBox>
+
+                <!-- API Key -->
+                <VBox fx:id="apiKeyAuthPane" spacing="10" visible="false" managed="false" styleClass="card">
+                    <padding>
+                        <Insets top="15" right="15" bottom="15" left="15"/>
+                    </padding>
+                    <HBox styleClass="panel-header">
+                        <padding>
+                            <Insets bottom="10"/>
+                        </padding>
+                        <Label text="API Key Authentication" styleClass="h5,text-primary"/>
+                    </HBox>
+                    <GridPane hgap="10" vgap="15">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="120" prefWidth="120"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                        </columnConstraints>
+                        <Label text="Key Name:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="text-muted"/>
+                        <TextField fx:id="apiKeyName" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="form-control" promptText="Enter API key name"/>
+                        <Label text="Key Value:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="text-muted"/>
+                        <TextField fx:id="apiKeyValue" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="form-control" promptText="Enter API key value"/>
+                        <Label text="Add to:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="text-muted"/>
+                        <ComboBox fx:id="apiKeyLocation" promptText="Select location" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="combo-box,form-control"/>
+                    </GridPane>
+                </VBox>
+
+                <!-- OAuth 2.0 -->
+                <VBox fx:id="oauth2AuthPane" spacing="10" visible="false" managed="false" styleClass="card">
+                    <padding>
+                        <Insets top="15" right="15" bottom="15" left="15"/>
+                    </padding>
+                    <HBox styleClass="panel-header">
+                        <padding>
+                            <Insets bottom="10"/>
+                        </padding>
+                        <Label text="OAuth 2.0 Authentication" styleClass="h5,text-primary"/>
+                    </HBox>
+                    <GridPane hgap="10" vgap="15">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="120" prefWidth="120"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                        </columnConstraints>
+                        <Label text="Access Token:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="text-muted"/>
+                        <TextField fx:id="oauth2Token" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="form-control" promptText="Enter OAuth 2.0 access token"/>
+                    </GridPane>
+                </VBox>
+            </VBox>
+        </Tab>
+    </TabPane>
+</VBox>
