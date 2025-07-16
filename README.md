@@ -27,8 +27,11 @@ A powerful and user-friendly REST API client built with JavaFX, designed for tes
 ## Installation
 
 ### Prerequisites
-- Java 11 or higher
-- Maven 3.6 or higher
+- OpenJDK 11 or higher (Oracle JDK also supported)
+- Maven 3.6 or higher (for building from source)
+
+### Self-Contained JAR
+The application is packaged as a self-contained JAR that includes all JavaFX runtime libraries for Windows, Linux, and macOS. No external JavaFX installation is required.
 
 ### Build from Source
 ```bash
@@ -48,8 +51,8 @@ run.bat
 # Run the application (Linux/Mac)
 ./run.sh
 
-# Or run directly with Java
-java --module-path /path/to/javafx/lib --add-modules javafx.controls,javafx.fxml -jar target/RestClientTool-standalone.jar
+# Or run directly with Java (no JavaFX module path required)
+java -jar target/RestClientTool-standalone.jar
 ```
 
 ### Run with Maven (Development)

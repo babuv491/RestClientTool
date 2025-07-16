@@ -15,11 +15,11 @@ public class Launcher {
      * @param args command line arguments
      */
     public static void main(String[] args) {
-        // Set JavaFX system properties to avoid module issues
+        // Set JavaFX system properties for OpenJDK 11 compatibility
         System.setProperty("java.awt.headless", "false");
-       
+        
         try {
-            // Launch JavaFX application without module system
+            // Launch JavaFX application
             javafx.application.Application.launch(RestClientApplication.class, args);
         } catch (Exception e) {
             System.err.println("Failed to start application: " + e.getMessage());

@@ -13,6 +13,11 @@
         <configuration>
           <source>11</source>
           <target>11</target>
+          <release>11</release>
+          <compilerArgs>
+            <arg>--add-exports</arg>
+            <arg>javafx.base/com.sun.javafx.event=ALL-UNNAMED</arg>
+          </compilerArgs>
         </configuration>
       </plugin>
       <plugin>
@@ -29,6 +34,7 @@
                 <transformer>
                   <mainClass>com.rct.restclienttool.Launcher</mainClass>
                 </transformer>
+                <transformer />
               </transformers>
               <filters>
                 <filter>
@@ -60,6 +66,95 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>windows</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-controls</artifactId>
+          <version>17.0.2</version>
+          <classifier>win</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-fxml</artifactId>
+          <version>17.0.2</version>
+          <classifier>win</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-base</artifactId>
+          <version>17.0.2</version>
+          <classifier>win</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-graphics</artifactId>
+          <version>17.0.2</version>
+          <classifier>win</classifier>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>linux</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-controls</artifactId>
+          <version>17.0.2</version>
+          <classifier>linux</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-fxml</artifactId>
+          <version>17.0.2</version>
+          <classifier>linux</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-base</artifactId>
+          <version>17.0.2</version>
+          <classifier>linux</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-graphics</artifactId>
+          <version>17.0.2</version>
+          <classifier>linux</classifier>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>mac</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-controls</artifactId>
+          <version>17.0.2</version>
+          <classifier>mac</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-fxml</artifactId>
+          <version>17.0.2</version>
+          <classifier>mac</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-base</artifactId>
+          <version>17.0.2</version>
+          <classifier>mac</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-graphics</artifactId>
+          <version>17.0.2</version>
+          <classifier>mac</classifier>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
   <properties>
     <rest-assured.version>5.3.1</rest-assured.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
