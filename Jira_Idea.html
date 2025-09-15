@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JIRA Status Report Automation - Design Document</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #172b4d;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #0052cc, #2684ff);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #dfe1e6;
+            border-radius: 8px;
+            background: #fafbfc;
+        }
+        .diagram {
+            background: white;
+            border: 2px solid #dfe1e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .flow-box {
+            display: inline-block;
+            background: #e3fcef;
+            border: 2px solid #00875a;
+            border-radius: 6px;
+            padding: 15px 20px;
+            margin: 10px;
+            min-width: 120px;
+        }
+        .flow-arrow {
+            font-size: 24px;
+            color: #0052cc;
+            margin: 0 10px;
+        }
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .tech-item {
+            background: white;
+            border: 1px solid #dfe1e6;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+        }
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .benefit-card {
+            background: white;
+            border-left: 4px solid #36b37e;
+            padding: 20px;
+            border-radius: 0 6px 6px 0;
+        }
+        .timeline {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: #f4f5f7;
+            border-radius: 6px;
+        }
+        .timeline-number {
+            background: #0052cc;
+           color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        .code-block {
+            background: #f4f5f7;
+            border: 1px solid #dfe1e6;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+        .architecture-diagram {
+            background: white;
+            border: 2px solid #dfe1e6;
+            border-radius: 8px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+        .component {
+            display: inline-block;
+            background: #deebff;
+            border: 2px solid #0052cc;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px;
+            min-width: 150px;
+            text-align: center;
+        }
+        .data-flow {
+            background: #fff2e0;
+            border: 2px solid #ff8b00;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px;
+            display: inline-block;
+        }
+        h1, h2, h3 { color: #172b4d; }
+        h2 { border-bottom: 2px solid #0052cc; padding-bottom: 10px; }
+        .highlight { background: #fff2e0; padding: 2px 6px; border-radius: 3px; }
+        .status-badge {
+            background: #36b37e;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 JIRA Status Report Automation</h1>
+        <p><strong>Automated Daily Status Reporting System</strong></p>
+        <p>Streamline project communication with intelligent JIRA data extraction and automated email reporting</p>
+        <span class="status-badge">PROPOSAL</span>
+    </div>
+
+    <div class="section">
+        <h2>📋 Executive Summary</h2>
+        <p>This document outlines the design and implementation strategy for automating daily status reports by integrating with JIRA REST APIs and email services. The solution eliminates manual effort in generating project status updates while providing comprehensive insights into project progress, completion percentages, and blockers.</p>
+       
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <h3>⏰ Time Savings</h3>
+                <p>Reduce daily reporting time from 30+ minutes to zero manual effort</p>
+            </div>
+            <div class="benefit-card">
+                <h3>📊 Accuracy</h3>
+                <p>Eliminate human errors with automated data extraction and calculations</p>
+            </div>
+            <div class="benefit-card">
+                <h3>🔄 Consistency</h3>
+                <p>Standardized reporting format with consistent metrics and formatting</p>
+            </div>
+            <div class="benefit-card">
+                <h3>📈 Insights</h3>
+                <p>Real-time progress tracking with trend analysis and blocker identification</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🏗️ High-Level Architecture</h2>
+        <div class="architecture-diagram">
+            <div class="component">
+                <strong>JIRA Server</strong><br>
+                <small>Stories & Tasks Data</small>
+            </div>
+            <span class="flow-arrow">→</span>
+            <div class="component">
+                <strong>Java Application</strong><br>
+                <small>Data Processing Engine</small>
+            </div>
+            <span class="flow-arrow">→</span>
+            <div class="component">
+                <strong>Email Service</strong><br>
+                <small>SMTP/Gmail API</small>
+            </div>
+            <span class="flow-arrow">→</span>
+            <div class="component">
+                <strong>Stakeholders</strong><br>
+                <small>Automated Reports</small>
+            </div>
+        </div>
+
+        <h3>🔄 Data Flow Process</h3>
+        <div class="diagram">
+            <div class="data-flow">Scheduler Trigger</div>
+            <span class="flow-arrow">→</span>
+            <div class="data-flow">JIRA API Call</div>
+            <span class="flow-arrow">→</span>
+            <div class="data-flow">Data Processing</div>
+            <span class="flow-arrow">→</span>
+            <div class="data-flow">Report Generation</div>
+            <span class="flow-arrow">→</span>
+            <div class="data-flow">Email Delivery</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🛠️ Technology Stack</h2>
+        <div class="tech-stack">
+            <div class="tech-item">
+                <h3>☕ Java 11+</h3>
+                <p>Core application development with modern features</p>
+            </div>
+            <div class="tech-item">
+                <h3>🍃 Spring Boot</h3>
+                <p>Framework for REST clients and scheduling</p>
+            </div>
+            <div class="tech-item">
+                <h3>🔗 JIRA REST API</h3>
+                <p>Data extraction from JIRA projects</p>
+            </div>
+            <div class="tech-item">
+                <h3>📧 JavaMail API</h3>
+                <p>Email composition and delivery</p>
+            </div>
+            <div class="tech-item">
+                <h3>📊 Apache POI</h3>
+                <p>Excel report generation (optional)</p>
+            </div>
+            <div class="tech-item">
+                <h3>⏰ Quartz Scheduler</h3>
+                <p>Automated daily execution</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🔧 Low-Level Design</h2>
+       
+        <h3>📦 Component Architecture</h3>
+        <div class="code-block">com.company.jira.automation/
+├── config/
+│   ├── JiraConfig.java          # JIRA connection configuration
+│   ├── EmailConfig.java         # Email service configuration
+│   └── SchedulerConfig.java     # Quartz scheduler setup
+├── service/
+│   ├── JiraService.java         # JIRA API integration
+│   ├── ReportService.java       # Report generation logic
+│   ├── EmailService.java        # Email composition & sending
+│   └── SchedulerService.java    # Job scheduling management
+├── model/
+│   ├── JiraIssue.java          # JIRA issue data model
+│   ├── ProjectStatus.java       # Project status aggregation
+│   └── EmailReport.java         # Email report structure
+├── dto/
+│   ├── IssueResponse.java       # JIRA API response mapping
+│   └── StatusSummary.java       # Status summary data
+└── JiraAutomationApplication.javaerService.java    # Job scheduling management
+├── model/
+│   ├── JiraIssue.java          # JIRA issue data model
+│   ├── ProjectStatus.java       # Project status aggregation
+│   └── EmailReport.java         # Email report structure
+├── dto/
+│   ├── IssueResponse.java       # JIRA API response mapping
+│   └── StatusSummary.java       # Status summary data
+└── JiraAutomationApplication.java
+        </div>
+
+        <h3>🔍 Key Components Detail</h3>
+       
+        <h4>1. JIRA Service Integration</h4>
+        <div class="code-block">@Service
+public class JiraService {
+   
+    // Fetch issues by project and sprint
+    public List&lt;JiraIssue&gt; getProjectIssues(String projectKey, String sprintId);
+   
+    // Calculate completion percentage
+    public double calculateCompletionPercentage(List&lt;JiraIssue&gt; issues);
+   
+    // Identify blockers and high-priority issues
+    public List&lt;JiraIssue&gt; getBlockers(List&lt;JiraIssue&gt; issues);
+   
+    // Get sprint burndown data
+    public SprintBurndown getSprintBurndown(String sprintId);
+}</div>
+
+        <h4>2. Report Generation Engine</h4>
+        <div class="code-block">@Service
+public class ReportService {
+   
+    // Generate comprehensive status report
+    public StatusReport generateDailyReport(String projectKey);
+   
+    // Create HTML email content
+    public String createHtmlReport(StatusReport report);
+   
+    // Generate charts and graphs (optional)
+    public byte[] generateProgressChart(StatusReport report);
+}</div>
+
+        <h4>3. Email Service</h4>
+        <div class="code-block">@Service
+public class EmailService {
+   
+    // Send formatted email report
+    public void sendStatusReport(String htmlContent, List&lt;String&gt; recipients);
+   
+    // Attach charts or Excel files
+    public void sendReportWithAttachments(EmailReport report);
+}</div>
+    </div>
+
+    <div class="section">
+        <h2>📊 Report Content Structure</h2>
+       
+        <h3>📈 Comprehensive Report Features:</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+                <h4>📊 Core Metrics</h4>
+                <ul>
+                    <li><strong>Sprint Progress</strong> - Completion %, velocity, burndown</li>
+                    <li><strong>Story Breakdown</strong> - Status distribution with counts</li>
+                    <li><strong>Team Performance</strong> - Individual productivity metrics</li>
+                    <li><strong>Quality Metrics</strong> - Bug counts, code coverage, reviews</li>
+                </ul>
+            </div>
+            <div>
+                <h4>🚨 Critical Information</h4>
+                <ul>
+                    <li><strong>Blockers & Issues</strong> - Detailed blocker tracking table</li>
+                    <li><strong>Risk Assessment</strong> - Dependencies and potential delays</li>
+                    <li><strong>Daily Achievements</strong> - Completed tasks and milestones</li>
+                    <li><strong>Tomorrow's Plan</strong> - Upcoming priorities and focus areas</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="diagram">
+            <h4>📧 Sample Email Report Layout</h4>
+            <div style="background: white; border: 1px solid #ddd; padding: 20px; text-align: left; max-width: 700px; margin: 0 auto; font-family: Arial, sans-serif;">
+                <div style="background: linear-gradient(135deg, #0052cc, #2684ff); color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                    <h3 style="color: white; margin: 0;">📊 Daily Status Report - Project Alpha</h3>
+                    <p style="margin: 5px 0 0 0;"><strong>Date:</strong> March 15, 2024 | <strong>Sprint:</strong> Sprint 12 | <strong>Team:</strong> Backend Development</p>
+                </div>
+               
+                <div style="background: #e3fcef; padding: 15px; border-radius: 6px; margin: 15px 0; border-left: 4px solid #00875a;">
+                    <h4 style="margin-top: 0; color: #00875a;">📈 Sprint Progress Overview</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <p><strong>✅ Overall Completion:</strong> 67% (20/30 stories)</p>
+                            <p><strong>🔥 Current Velocity:</strong> 45 story points</p>
+                            <p><strong>⏰ Days Remaining:</strong> 5 days</p>
+                        </div>
+                        <div>
+                            <p><strong>🎯 Sprint Goal:</strong> API Integration Complete</p>
+                            <p><strong>📅 Sprint End:</strong> March 20, 2024</p>
+                            <p><strong>👥 Team Size:</strong> 8 developers</p>
+                        </div>
+                    </div>
+                </div>
+               
+                <div style="background: #fff2e0; padding: 15px; border-radius: 6px; margin: 15px 0; border-left: 4px solid #ff8b00;">
+                    <h4 style="margin-top: 0; color: #ff8b00;">🚨 Critical Issues & Blockers (3)</h4>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr style="background: #f4f5f7;">
+                            <th style="text-align: left; padding: 8px; border: 1px solid #ddd;">Issue</th>
+                            <th style="text-align: left; padding: 8px; border: 1px solid #ddd;">Assignee</th>
+                            <th style="text-align: left; padding: 8px; border: 1px solid #ddd;">Priority</th>
+                            <th style="text-align: left; padding: 8px; border: 1px solid #ddd;">Days Blocked</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;">API-123: Database connection timeout</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">John Smith</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">🔴 Critical</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">2 days</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;">UI-456: Design approval pending</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Sarah Johnson</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">🟡 High</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">1 day</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;">INFRA-789: AWS deployment issues</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Mike Chen</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">🔴 Critical</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">3 days</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div style="background: #deebff; padding: 15px; border-radius: 6px; margin: 15px 0; border-left: 4px solid #0052cc;">
+                    <h4 style="margin-top: 0; color: #0052cc;">📋 Story Status Breakdown</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; text-align: center;">
+                        <div style="background: #e3fcef; padding: 10px; border-radius: 4px;">
+                            <h3 style="margin: 0; color: #00875a;">20</h3>
+                            <p style="margin: 5px 0 0 0;">🟢 Done</p>
+                        </div>
+                        <div style="background: #fff2e0; padding: 10px; border-radius: 4px;">
+                            <h3 style="margin: 0; color: #ff8b00;">7</h3>
+                            <p style="margin: 5px 0 0 0;">🟡 In Progress</p>
+                        </div>
+                        <div style="background: #f4f5f7; padding: 10px; border-radius: 4px;">
+                            <h3 style="margin: 0; color: #6b778c;">3</h3>
+                            <p style="margin: 5px 0 0 0;">⚪ To Do</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: #f0f4ff; padding: 15px; border-radius: 6px; margin: 15px 0; border-left: 4px solid #5243aa;">
+                    <h4 style="margin-top: 0; color: #5243aa;">👥 Team Performance</h4>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr style="background: #f4f5f7;">
+                            <th style="text-align: left; padding: 8px; border: 1px solid #ddd;">Developer</th>
+                            <th style="text-align: left; padding: 8px; border: 1px solid #ddd;">Completed</th>
+                            <th style="text-align: left; padding: 8px; border: 1px solid #ddd;">In Progress</th>
+                            <th style="text-align: left; padding: 8px; border: 1px solid #ddd;">Story Points</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;">John Smith</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">3 stories</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">1 story</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">13 pts</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Sarah Johnson</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">2 stories</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">2 stories</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">11 pts</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Mike Chen</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">4 stories</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">1 story</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">15 pts</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div style="background: #e8f5e8; padding: 15px; border-radius: 6px; margin: 15px 0; border-left: 4px solid #36b37e;">
+                    <h4 style="margin-top: 0; color: #36b37e;">🎯 Today's Achievements</h4>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li>✅ User authentication API completed (API-101)</li>
+                        <li>✅ Database migration scripts deployed (DB-205)</li>
+                        <li>✅ Unit tests coverage increased to 85%</li>
+                        <li>✅ Code review completed for payment module</li>
+                    </ul>
+                </div>
+
+                <div style="background: #fff4e6; padding: 15px; border-radius: 6px; margin: 15px 0; border-left: 4px solid #ff991f;">
+                    <h4 style="margin-top: 0; color: #ff991f;">📅 Tomorrow's Plan</h4>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li>🔧 Resolve database connection timeout issue</li>
+                        <li>🎨 Complete UI design review and approval</li>
+                        <li>🚀 Deploy hotfix for production bug</li>
+                        <li>📝 Update API documentation</li>
+                    </ul>
+                </div>
+
+                <div style="background: #f4f5f7; padding: 15px; border-radius: 6px; margin: 15px 0; border-left: 4px solid #6b778c;">
+                    <h4 style="margin-top: 0; color: #6b778c;">📊 Sprint Metrics</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <p><strong>📈 Burndown Rate:</strong> On track</p>
+                            <p><strong>🐛 Bugs Found:</strong> 3 (2 resolved)</p>
+                            <p><strong>🔄 Code Reviews:</strong> 12 completed</p>
+                        </div>
+                        <div>
+                            <p><strong>⚡ Avg Resolution Time:</strong> 1.2 days</p>
+                            <p><strong>🎯 Sprint Confidence:</strong> 85%</p>
+                            <p><strong>📋 Scope Changes:</strong> 1 story added</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: #ffebe6; padding: 15px; border-radius: 6px; margin: 15px 0; border-left: 4px solid #de350b;">
+                    <h4 style="margin-top: 0; color: #de350b;">⚠️ Risks & Dependencies</h4>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li>🔴 <strong>High Risk:</strong> Third-party API integration delay may impact release</li>
+                        <li>🟡 <strong>Medium Risk:</strong> Team member on leave next week</li>
+                        <li>🔗 <strong>Dependency:</strong> Waiting for security team approval</li>
+                    </ul>
+                </div>
+
+                <div style="text-align: center; margin-top: 20px; padding: 15px; background: #f4f5f7; border-radius: 6px;">
+                    <p style="margin: 0; color: #6b778c; font-size: 12px;">
+                        📧 Generated automatically by JIRA Status Automation |
+                        📅 Report Time: 09:00 AM EST |
+                        🔄 Next Report: Tomorrow 09:00 AM
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <h3>📋 Additional Report Variations</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+            <div style="background: white; border: 1px solid #ddd; padding: 15px; border-radius: 6px;">
+                <h4>📊 Weekly Summary Report</h4>
+                <ul style="font-size: 14px;">
+                    <li>Sprint retrospective insights</li>
+                    <li>Velocity trends and forecasting</li>
+                    <li>Team productivity metrics</li>
+                    <li>Quality metrics (bugs, code coverage)</li>
+                    <li>Stakeholder feedback summary</li>
+                </ul>
+            </div>
+            <div style="background: white; border: 1px solid #ddd; padding: 15px; border-radius: 6px;">
+                <h4>🎯 Executive Dashboard</h4>
+                <ul style="font-size: 14px;">
+                    <li>High-level project status</li>
+                    <li>Budget and timeline tracking</li>
+                    <li>Risk assessment summary</li>
+                    <li>Key milestone progress</li>
+                    <li>Resource allocation overview</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>⚙️ Implementation Timeline</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-number">1</div>
+                <div>
+                    <strong>Week 1: Setup & Configuration</strong><br>
+                    Project setup, JIRA API integration, authentication
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-number">2</div>
+                <div>
+                    <strong>Week 2: Core Services Development</strong><br>
+                    JIRA service, data models, report generation logic
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-number">3</div>
+                <div>
+                    <strong>Week 3: Email Integration & Templates</strong><br>
+                    Email service, HTML templates, formatting
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-number">4</div>
+                <div>
+                    <strong>Week 4: Scheduling & Testing</strong><br>
+                    Quartz scheduler, comprehensive testing, deployment
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🔐 Security & Configuration</h2>
+       
+        <h3>🛡️ Security Considerations</h3>
+        <ul>
+            <li><strong>API Authentication</strong> - OAuth 2.0 or API tokens for JIRA access</li>
+            <li><strong>Credential Management</strong> - Environment variables or secure vault</li>
+            <li><strong>Email Security</strong> - TLS/SSL encryption for email transmission</li>
+            <li><strong>Access Control</strong> - Role-based access to different project reports</li>
+        </ul>
+
+        <h3>⚙️ Configuration Parameters</h3>
+        <div class="code-block"># application.yml
+jira:
+  base-url: https://company.atlassian.net
+  username: ${JIRA_USERNAME}
+  api-token: ${JIRA_API_TOKEN}
+  projects: [PROJ1, PROJ2, PROJ3]
+
+email:
+  smtp:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+  recipients:
+    - manager@company.com
+    - team-lead@company.com
+
+scheduler:
+  daily-report-time: "09:00"
+  timezone: "America/New_York"</div>
+    </div>
+
+    <div class="section">
+        <h2>📈 Expected Benefits & ROI</h2>
+       
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <h3>💰 Cost Savings</h3>
+                <p><strong>$2,400/year</strong><br>
+                30 min/day × 5 days × 52 weeks × $30/hour</p>
+            </div>
+            <div class="benefit-card">
+                <h3>⚡ Efficiency Gain</h3>
+                <p><strong>130 hours/year</strong><br>
+                Time saved for strategic activities</p>
+            </div>
+            <div class="benefit-card">
+                <h3>📊 Data Accuracy</h3>
+                <p><strong>99.9% accuracy</strong><br>
+                Elimination of manual calculation errors</p>
+            </div>
+            <div class="benefit-card">
+                <h3>🎯 Stakeholder Satisfaction</h3>
+                <p><strong>Consistent delivery</strong><br>
+                Never miss a daily report again</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🚀 Next Steps</h2>
+        <ol>
+            <li><strong>Approval</strong> - Get stakeholder sign-off on the design</li>
+            <li><strong>Environment Setup</strong> - Provision development environment and access</li>
+            <li><strong>API Access</strong> - Obtain JIRA API credentials and permissions</li>
+            <li><strong>Development Start</strong> - Begin implementation following the timeline</li>
+            <li><strong>Pilot Testing</strong> - Test with a single project before full rollout</li>
+        </ol>
+       
+        <div style="background: #e3fcef; padding: 20px; border-radius: 8px; margin-top: 20px;">
+            <h3>💡 Ready to Transform Your Reporting Process?</h3>
+            <p>This automation solution will revolutionize how we handle daily status reporting, providing consistent, accurate, and timely updates to all stakeholders while freeing up valuable time for strategic work.</p>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px; padding: 20px; background: #f4f5f7; border-radius: 8px;">
+        <p><strong>Document Version:</strong> 1.0 | <strong>Last Updated:</strong> March 2024 | <strong>Author:</strong> Development Team</p>
+    </div>
+</body>
+</html>
+ 
